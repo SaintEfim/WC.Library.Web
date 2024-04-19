@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WC.Library.Web", "src\WC.Library.Web\WC.Library.Web.csproj", "{1820CBA4-7669-4ADF-AD51-7C66EF5B9D3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{94FB740E-D0D4-4159-B34C-076226348071}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1820CBA4-7669-4ADF-AD51-7C66EF5B9D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1820CBA4-7669-4ADF-AD51-7C66EF5B9D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1820CBA4-7669-4ADF-AD51-7C66EF5B9D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1820CBA4-7669-4ADF-AD51-7C66EF5B9D3D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
