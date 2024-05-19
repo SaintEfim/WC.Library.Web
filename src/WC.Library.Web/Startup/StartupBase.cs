@@ -26,7 +26,7 @@ public abstract class StartupBase
 
     private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
 
-    internal virtual void ConfigureServices(WebApplicationBuilder builder)
+    public virtual void ConfigureServices(WebApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddExceptionMappingFromAllAssemblies();
@@ -46,7 +46,7 @@ public abstract class StartupBase
         builder.RegisterType<GetTitleAndStatusCodeHelper>().SingleInstance();
     }
 
-    private void ConfigureSwagger(IServiceCollection services)
+    private static void ConfigureSwagger(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
