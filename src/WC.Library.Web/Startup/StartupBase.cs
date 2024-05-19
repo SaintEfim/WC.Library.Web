@@ -34,7 +34,6 @@ public abstract class StartupBase
         services.AddExceptionMappingFromAllAssemblies();
         services.AddControllers();
         services.AddAutoMapper(_assemblies.Value);
-        services.AddSignalR();
 
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
@@ -92,7 +91,8 @@ public abstract class StartupBase
                 Description = BearerTokenConstants.DescriptionToken,
                 Name = "Authorization",
                 In = ParameterLocation.Header,
-                Scheme = BearerTokenConstants.TokenType
+                Scheme = BearerTokenConstants.TokenType,
+                BearerFormat = "JWT"
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -105,7 +105,7 @@ public abstract class StartupBase
                             Type = ReferenceType.SecurityScheme,
                             Id = BearerTokenConstants.TokenType
                         },
-                        Scheme = "oauth2",
+                        Scheme = "Bearer",
                         Name = BearerTokenConstants.TokenType,
                         In = ParameterLocation.Header
                     },
