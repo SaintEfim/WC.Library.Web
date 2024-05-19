@@ -13,6 +13,7 @@ public class Program<TStartup> where TStartup : StartupBase
     public static async Task Main(string[] args)
     {
         var appBuilder = WebApplication.CreateBuilder(args);
+        var app = WebApplication.Create();
         appBuilder.Logging.ClearProviders();
 
         var startup = Activator.CreateInstance(typeof(TStartup), appBuilder) as TStartup;
@@ -29,19 +30,6 @@ public class Program<TStartup> where TStartup : StartupBase
 
         startup.ConfigureServices(appBuilder);
 
-        var app = appBuilder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        app.UseHttpsRedirection();
-        app.UseSerilogRequestLogging();
-        app.UseRouting();
-        app.UseExceptionHandler();
-        app.MapControllers();
-        await app.RunAsync();
+        await startup.Configure(app);
     }
 }

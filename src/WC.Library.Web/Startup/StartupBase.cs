@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using WC.Library.Shared.Constants;
 using WC.Library.Web.Helpers;
 using WC.Library.Web.Infrastructure.ExceptionHandling;
@@ -44,6 +46,22 @@ public abstract class StartupBase
     {
         builder.RegisterType<BuildErrorDtoHelper>().SingleInstance();
         builder.RegisterType<GetTitleAndStatusCodeHelper>().SingleInstance();
+    }
+
+    public virtual async Task Configure(WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseSerilogRequestLogging();
+        app.UseRouting();
+        app.UseExceptionHandler();
+        app.MapControllers();
+        await app.RunAsync();
     }
 
     private static void ConfigureSwagger(IServiceCollection services)
