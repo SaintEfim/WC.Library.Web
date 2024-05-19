@@ -34,12 +34,15 @@ public abstract class StartupBase
         services.AddExceptionMappingFromAllAssemblies();
         services.AddControllers();
         services.AddAutoMapper(_assemblies.Value);
+        services.AddSignalR();
 
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+
+        services.AddAuthorization();
     }
 
     public virtual void ConfigureContainer(ContainerBuilder builder)
@@ -48,7 +51,7 @@ public abstract class StartupBase
         builder.RegisterType<GetTitleAndStatusCodeHelper>().SingleInstance();
     }
 
-    public virtual async Task Configure(WebApplication app)
+    public virtual void Configure(WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -59,9 +62,14 @@ public abstract class StartupBase
         app.UseHttpsRedirection();
         app.UseSerilogRequestLogging();
         app.UseRouting();
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
         app.UseExceptionHandler();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.MapControllers();
-        await app.RunAsync();
     }
 
     private static void ConfigureSwagger(IServiceCollection services)

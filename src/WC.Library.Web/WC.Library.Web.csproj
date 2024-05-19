@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageId>WC.Library.Web</PackageId>
-        <Version>1.0.2</Version>
+        <Version>1.0.5</Version>
         <Authors>SaintEfim</Authors>
     </PropertyGroup>
 
@@ -17,6 +17,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
       <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Middleware" Version="8.5.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.5" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

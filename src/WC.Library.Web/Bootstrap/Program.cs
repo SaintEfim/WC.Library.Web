@@ -30,6 +30,7 @@ public class Program<TStartup> where TStartup : StartupBase
 
         startup.ConfigureServices(appBuilder);
 
-        await startup.Configure(app);
+        startup.Configure(app);
+        await app.RunAsync();
     }
 }
