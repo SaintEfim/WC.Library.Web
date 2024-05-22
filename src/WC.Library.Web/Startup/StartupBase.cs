@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using WC.Library.Shared.Constants;
 using WC.Library.Web.Helpers;
 using WC.Library.Web.Infrastructure.ExceptionHandling;
@@ -26,7 +28,7 @@ public abstract class StartupBase
 
     private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
 
-    internal virtual void ConfigureServices(WebApplicationBuilder builder)
+    public virtual void ConfigureServices(WebApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddExceptionMappingFromAllAssemblies();
@@ -38,6 +40,8 @@ public abstract class StartupBase
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+
+        services.AddAuthorization();
     }
 
     public virtual void ConfigureContainer(ContainerBuilder builder)
@@ -46,7 +50,28 @@ public abstract class StartupBase
         builder.RegisterType<GetTitleAndStatusCodeHelper>().SingleInstance();
     }
 
-    private void ConfigureSwagger(IServiceCollection services)
+    public virtual void Configure(WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseSerilogRequestLogging();
+        app.UseRouting();
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+        app.UseExceptionHandler();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+    }
+
+    private static void ConfigureSwagger(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
@@ -66,7 +91,8 @@ public abstract class StartupBase
                 Description = BearerTokenConstants.DescriptionToken,
                 Name = "Authorization",
                 In = ParameterLocation.Header,
-                Scheme = BearerTokenConstants.TokenType
+                Scheme = BearerTokenConstants.TokenType,
+                BearerFormat = "JWT"
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -79,7 +105,7 @@ public abstract class StartupBase
                             Type = ReferenceType.SecurityScheme,
                             Id = BearerTokenConstants.TokenType
                         },
-                        Scheme = "oauth2",
+                        Scheme = "Bearer",
                         Name = BearerTokenConstants.TokenType,
                         In = ParameterLocation.Header
                     },
@@ -107,6 +133,19 @@ public abstract class StartupBase
                         Encoding.ASCII.GetBytes(Configuration.GetValue<string>("ApiSettings:AccessSecret")!)),
                 ValidateIssuer = false,
                 ValidateAudience = false
+            };
+            x.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+                    if (!string.IsNullOrEmpty(accessToken))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
             };
         });
     }
