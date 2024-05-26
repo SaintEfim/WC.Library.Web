@@ -20,8 +20,8 @@ public class Program<TStartup> where TStartup : StartupBase
             loggerConfiguration.ReadFrom.Configuration(context.Configuration);
         });
 
-        var startup = Activator.CreateInstance(typeof(TStartup), appBuilder) as TStartup;
-        if (startup == null) throw new ArgumentNullException(nameof(startup));
+        if (Activator.CreateInstance(typeof(TStartup), appBuilder) is not TStartup startup)
+            throw new ArgumentNullException(nameof(startup));
 
         appBuilder.Host
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
