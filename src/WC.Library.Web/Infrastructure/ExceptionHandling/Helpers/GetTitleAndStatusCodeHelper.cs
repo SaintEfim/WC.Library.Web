@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using WC.Library.Shared.Constants;
-using Microsoft.Extensions.Configuration;
 
 namespace WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
 
@@ -8,8 +7,7 @@ public class GetTitleAndStatusCodeHelper
 {
     private readonly Dictionary<Type, (string title, int statusCode)> _exceptionMapping;
 
-    public GetTitleAndStatusCodeHelper(Dictionary<Type, (string title, int statusCode)> exceptionMapping,
-        IConfiguration config)
+    public GetTitleAndStatusCodeHelper(Dictionary<Type, (string title, int statusCode)> exceptionMapping)
     {
         _exceptionMapping = exceptionMapping;
     }
