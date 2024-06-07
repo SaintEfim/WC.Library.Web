@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
+using WC.Library.Web.Helpers;
 
-namespace WC.Library.Web.Infrastructure.ExceptionHandling;
+namespace WC.Library.Web.ExceptionHandling;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -31,6 +31,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var details = _buildErrorDto.BuildErrorDto(title, statusCode, exception);
         var response = JsonSerializer.Serialize(details);
+
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = details.Status;
 

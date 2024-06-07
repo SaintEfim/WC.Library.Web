@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 
-namespace WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
+namespace WC.Library.Web.Helpers;
 
 public static class MapExceptionsHelper
 {

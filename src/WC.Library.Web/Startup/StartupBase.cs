@@ -10,10 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using WC.Library.Shared.Constants;
+using WC.Library.Web.ExceptionHandling;
 using WC.Library.Web.Helpers;
-using WC.Library.Web.Infrastructure.ExceptionHandling;
-using WC.Library.Web.Infrastructure.ExceptionHandling.Extensions;
-using WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
 
 namespace WC.Library.Web.Startup;
 

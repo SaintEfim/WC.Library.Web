@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using WC.Library.Shared.Constants;
 
-namespace WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
+namespace WC.Library.Web.Helpers;
 
 public class GetTitleAndStatusCodeHelper
 {

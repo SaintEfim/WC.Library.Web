@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,17 +9,13 @@ public abstract class ApiControllerBase<TCategoryName> : ControllerBase
 {
     protected ApiControllerBase(
         IMapper mapper,
-        ILogger<TCategoryName> logger,
-        IEnumerable<IValidator> validators)
+        ILogger<TCategoryName> logger)
     {
         Mapper = mapper;
         Logger = logger;
-        Validators = validators;
     }
 
     protected IMapper Mapper { get; }
 
     protected ILogger<TCategoryName> Logger { get; }
-
-    protected IEnumerable<IValidator> Validators { get; }
 }
