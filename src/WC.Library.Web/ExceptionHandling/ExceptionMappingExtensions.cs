@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
+using WC.Library.Web.Helpers;
 
-namespace WC.Library.Web.Infrastructure.ExceptionHandling.Extensions;
+namespace WC.Library.Web.ExceptionHandling;
 
 internal static class ExceptionMappingExtensions
 {

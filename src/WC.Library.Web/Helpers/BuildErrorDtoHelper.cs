@@ -2,7 +2,7 @@
 using WC.Library.Shared.Constants;
 using WC.Library.Web.Models;
 
-namespace WC.Library.Web.Infrastructure.ExceptionHandling.Helpers;
+namespace WC.Library.Web.Helpers;
 
 public class BuildErrorDtoHelper
 {
