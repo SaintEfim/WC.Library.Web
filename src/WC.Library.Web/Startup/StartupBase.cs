@@ -10,12 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using WC.Library.Shared.Constants;
-using WC.Library.Web.ExceptionHandling;
 using WC.Library.Web.Helpers;
+using WC.Library.Web.Middleware;
 
 namespace WC.Library.Web.Startup;
 
-public abstract class StartupBase
+public abstract class StartupBase : IStartupBase
 {
     protected IConfiguration Configuration { get; }
 
@@ -29,14 +29,12 @@ public abstract class StartupBase
     public virtual void ConfigureServices(WebApplicationBuilder builder)
     {
         var services = builder.Services;
-        services.AddExceptionMappingFromAllAssemblies();
         services.AddControllers();
         services.AddAutoMapper(_assemblies.Value);
 
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
-
-        services.AddExceptionHandler<GlobalExceptionHandler>();
+        
         services.AddProblemDetails();
 
         services.AddAuthorization();
@@ -44,8 +42,7 @@ public abstract class StartupBase
 
     public virtual void ConfigureContainer(ContainerBuilder builder)
     {
-        builder.RegisterType<BuildErrorDtoHelper>().SingleInstance();
-        builder.RegisterType<GetTitleAndStatusCodeHelper>().SingleInstance();
+        builder.RegisterModule<WcLibraryWebModule>();
     }
 
     public virtual void Configure(WebApplication app)
@@ -55,7 +52,7 @@ public abstract class StartupBase
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection();
         app.UseSerilogRequestLogging();
         app.UseRouting();
@@ -65,7 +62,9 @@ public abstract class StartupBase
 
         app.UseAuthentication();
         app.UseAuthorization();
-
+        
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        
         app.MapControllers();
     }
 
