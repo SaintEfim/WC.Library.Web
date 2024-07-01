@@ -8,7 +8,8 @@ using WC.Library.Web.Startup;
 
 namespace WC.Library.Web.Bootstrap;
 
-public class Program<TStartup> where TStartup : StartupBase
+public class Program<TStartup>
+    where TStartup : IStartupBase
 {
     public static async Task Main(string[] args)
     {
