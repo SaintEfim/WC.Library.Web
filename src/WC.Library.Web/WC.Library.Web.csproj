@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageId>WC.Library.Web</PackageId>
-        <Version>1.0.14</Version>
+        <Version>1.0.15</Version>
         <Authors>SaintEfim</Authors>
     </PropertyGroup>
 
@@ -27,7 +27,7 @@
       <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
-      <PackageReference Include="WC.Library.Domain.Abstractions" Version="1.0.4" />
+      <PackageReference Include="WC.Library.Domain.Abstractions" Version="1.0.5" />
       <PackageReference Include="WC.Library.Shared" Version="1.0.6" />
     </ItemGroup>
 

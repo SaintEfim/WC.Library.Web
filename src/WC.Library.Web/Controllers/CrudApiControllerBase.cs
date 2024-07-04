@@ -31,12 +31,12 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
 
     protected TProvider Provider { get; }
 
-    protected async Task<ICollection<TDto>> GetMany(
+    protected async Task<ICollection<TDto>> GetMany(bool withIncludes = false,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            return Mapper.Map<ICollection<TDto>>(await Provider.Get(cancellationToken));
+            return Mapper.Map<ICollection<TDto>>(await Provider.Get(withIncludes, cancellationToken));
         }
         catch (Exception ex)
         {
