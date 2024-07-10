@@ -29,12 +29,14 @@ public abstract class StartupBase : IStartupBase
     public virtual void ConfigureServices(WebApplicationBuilder builder)
     {
         var services = builder.Services;
-        services.AddControllers();
+        services.AddControllers()
+            .AddNewtonsoftJson();
+
         services.AddAutoMapper(_assemblies.Value);
 
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
-        
+
         services.AddProblemDetails();
 
         services.AddAuthorization();
@@ -52,7 +54,7 @@ public abstract class StartupBase : IStartupBase
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseSerilogRequestLogging();
         app.UseRouting();
@@ -62,9 +64,9 @@ public abstract class StartupBase : IStartupBase
 
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-        
+
         app.MapControllers();
     }
 
