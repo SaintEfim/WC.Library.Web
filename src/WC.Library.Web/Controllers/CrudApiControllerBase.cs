@@ -46,12 +46,12 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
     }
 
     protected async Task<TDto> GetOneById(
-        Guid id, CancellationToken cancellationToken = default)
+        Guid id, bool withIncludes = false, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id);
         try
         {
-            var entity = await Provider.GetOneById(id, cancellationToken);
+            var entity = await Provider.GetOneById(id, withIncludes, cancellationToken);
 
             ArgumentNullException.ThrowIfNull(entity);
 
