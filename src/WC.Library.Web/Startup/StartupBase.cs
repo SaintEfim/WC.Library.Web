@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Serilog;
 using WC.Library.Shared.Constants;
 using WC.Library.Web.Helpers;
@@ -51,8 +50,8 @@ public abstract class StartupBase : IStartupBase
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseOpenApi();
+            app.UseSwaggerUi();
         }
 
         app.UseHttpsRedirection();
@@ -72,45 +71,40 @@ public abstract class StartupBase : IStartupBase
 
     private static void ConfigureSwagger(IServiceCollection services)
     {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(options =>
+        services.AddOpenApiDocument(configure =>
         {
-            options.SwaggerDoc("v1",
-                new OpenApiInfo { Title = Assembly.GetEntryAssembly()?.GetName().Name, Version = "v1" });
+            configure.Title = Assembly.GetEntryAssembly()?.GetName().Name;
+            configure.Version = "v1";
 
             var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))
             {
-                options.IncludeXmlComments(xmlPath);
+                configure.PostProcess = document =>
+                {
+                    document.Info.Title = Assembly.GetEntryAssembly()?.GetName().Name;
+                    document.Info.Version = "v1";
+                    document.Info.Description = "API Documentation";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "API Contact",
+                        Email = "contact@example.com"
+                    };
+                };
             }
 
-            options.AddSecurityDefinition(BearerTokenConstants.TokenType, new OpenApiSecurityScheme
+            configure.AddSecurity("JWT", new NSwag.OpenApiSecurityScheme
             {
-                Description = BearerTokenConstants.DescriptionToken,
+                Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
                 Name = "Authorization",
-                In = ParameterLocation.Header,
-                Scheme = BearerTokenConstants.TokenType,
+                In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                Description = "Type into the textbox: Bearer {your JWT token}.",
+                Scheme = "Bearer",
                 BearerFormat = "JWT"
             });
 
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = BearerTokenConstants.TokenType
-                        },
-                        Scheme = "Bearer",
-                        Name = BearerTokenConstants.TokenType,
-                        In = ParameterLocation.Header
-                    },
-                    new List<string>()
-                }
-            });
+            configure.OperationProcessors.Add(
+                new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("JWT"));
         });
     }
 
