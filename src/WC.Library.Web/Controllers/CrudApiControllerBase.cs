@@ -10,11 +10,12 @@ using WC.Library.Web.Models;
 namespace WC.Library.Web.Controllers;
 
 public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, TDomain,
-    TDto> : ApiControllerBase<TCategoryName>
+    TDto, TDtoDetail> : ApiControllerBase<TCategoryName>
     where TManager : IDataManager<TDomain>
     where TProvider : IDataProvider<TDomain>
     where TDomain : class, IModel
     where TDto : class, IDto
+    where TDtoDetail : class, IDto
 {
     protected CrudApiControllerBase(
         IMapper mapper,
@@ -45,7 +46,7 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
         }
     }
 
-    protected async Task<TDto> GetOneById(
+    protected async Task<TDtoDetail> GetOneById(
         Guid id, bool withIncludes = false, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(id);
@@ -55,7 +56,7 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
 
             ArgumentNullException.ThrowIfNull(entity);
 
-            return Mapper.Map<TDto>(entity);
+            return Mapper.Map<TDtoDetail>(entity);
         }
         catch (Exception ex)
         {
@@ -120,5 +121,23 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
             Logger.LogError(ex, "Error deleting entity: {Message}", ex.Message);
             throw;
         }
+    }
+}
+
+public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, TDomain,
+    TDto> : CrudApiControllerBase<TCategoryName, TManager, TProvider, TDomain,
+    TDto, TDto>
+    where TManager : IDataManager<TDomain>
+    where TProvider : IDataProvider<TDomain>
+    where TDomain : class, IModel
+    where TDto : class, IDto
+{
+    protected CrudApiControllerBase(
+        IMapper mapper,
+        ILogger<TCategoryName> logger,
+        TManager manager,
+        TProvider provider)
+        : base(mapper, logger, manager, provider)
+    {
     }
 }
