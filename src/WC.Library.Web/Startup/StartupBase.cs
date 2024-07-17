@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using WC.Library.Web.Configuration;
 using WC.Library.Web.Helpers;
 using WC.Library.Web.Middleware;
 
@@ -17,12 +18,14 @@ public abstract class StartupBase : IStartupBase
 {
     protected IConfiguration Configuration { get; }
 
+    private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
+
     protected StartupBase(WebApplicationBuilder builder)
     {
         Configuration = builder.Configuration;
     }
 
-    private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
+    private AuthenticationConfiguration AuthenticationConfiguration => new(Configuration);
 
     public virtual void ConfigureServices(WebApplicationBuilder builder)
     {
@@ -122,7 +125,7 @@ public abstract class StartupBase : IStartupBase
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(Configuration.GetValue<string>("ApiSettings:AccessSecret")!)),
+                        Encoding.ASCII.GetBytes(AuthenticationConfiguration.AccessSecretKey)),
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
