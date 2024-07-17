@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using WC.Library.Shared.Constants;
 using WC.Library.Web.Helpers;
 using WC.Library.Web.Middleware;
 
