@@ -11,18 +11,23 @@ namespace WC.Library.Web.Bootstrap;
 public class Program<TStartup>
     where TStartup : IStartupBase
 {
-    public static async Task Main(string[] args)
+    public static async Task Main(
+        string[] args)
     {
         var appBuilder = WebApplication.CreateBuilder(args);
 
         appBuilder.Logging.ClearProviders();
-        appBuilder.Host.UseSerilog((context, loggerConfiguration) =>
+        appBuilder.Host.UseSerilog((
+            context,
+            loggerConfiguration) =>
         {
             loggerConfiguration.ReadFrom.Configuration(context.Configuration);
         });
 
         if (Activator.CreateInstance(typeof(TStartup), appBuilder) is not TStartup startup)
+        {
             throw new ArgumentNullException(nameof(startup));
+        }
 
         appBuilder.Host
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())

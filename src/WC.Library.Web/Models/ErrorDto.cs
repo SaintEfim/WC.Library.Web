@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Http;
 namespace WC.Library.Web.Models;
 
 /// <summary>
-/// Represents an error response DTO with details about the error.
+///     Represents an error response DTO with details about the error.
 /// </summary>
 public class ErrorDto
 {
     /// <summary>
-    /// The title or summary of the error.
+    ///     The title or summary of the error.
     /// </summary>
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    /// The HTTP status code associated with the error.
+    ///     The HTTP status code associated with the error.
     /// </summary>
     [Required]
     public int Status { get; set; } = StatusCodes.Status500InternalServerError;
@@ -25,7 +25,7 @@ public class ErrorDto
     public string? Description { get; set; }
 
     /// <summary>
-    /// Stack trace associated with the error.
+    ///     Stack trace associated with the error.
     /// </summary>
     public IEnumerable<string> StackTrace { get; set; } = Enumerable.Empty<string>();
 
