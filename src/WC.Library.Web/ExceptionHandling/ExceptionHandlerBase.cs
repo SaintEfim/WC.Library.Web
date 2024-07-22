@@ -10,7 +10,7 @@ namespace WC.Library.Web.ExceptionHandling;
 public abstract class ExceptionHandlerBase<T> : IExceptionHandler
     where T : Exception
 {
-    /// <inheritdoc/>
+    /// <inheritdoc cref="ExceptionType"/>
     public Type ExceptionType { get; } = typeof(T);
 
     /// <inheritdoc/>

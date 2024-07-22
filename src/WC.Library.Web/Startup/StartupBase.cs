@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using Serilog;
 using WC.Library.Web.Configuration;
 using WC.Library.Web.Helpers;
@@ -16,18 +18,20 @@ namespace WC.Library.Web.Startup;
 
 public abstract class StartupBase : IStartupBase
 {
-    protected IConfiguration Configuration { get; }
-
     private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
 
-    protected StartupBase(WebApplicationBuilder builder)
+    protected StartupBase(
+        WebApplicationBuilder builder)
     {
         Configuration = builder.Configuration;
     }
 
+    protected IConfiguration Configuration { get; }
+
     private AuthenticationConfiguration AuthenticationConfiguration => new(Configuration);
 
-    public virtual void ConfigureServices(WebApplicationBuilder builder)
+    public virtual void ConfigureServices(
+        WebApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddControllers()
@@ -43,12 +47,14 @@ public abstract class StartupBase : IStartupBase
         services.AddAuthorization();
     }
 
-    public virtual void ConfigureContainer(ContainerBuilder builder)
+    public virtual void ConfigureContainer(
+        ContainerBuilder builder)
     {
         builder.RegisterModule<WcLibraryWebModule>();
     }
 
-    public virtual void Configure(WebApplication app)
+    public virtual void Configure(
+        WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
@@ -71,11 +77,14 @@ public abstract class StartupBase : IStartupBase
         app.MapControllers();
     }
 
-    private static void ConfigureSwagger(IServiceCollection services)
+    private static void ConfigureSwagger(
+        IServiceCollection services)
     {
         services.AddOpenApiDocument(configure =>
         {
-            configure.Title = Assembly.GetEntryAssembly()?.GetName().Name;
+            configure.Title = Assembly.GetEntryAssembly()
+                ?.GetName()
+                .Name;
             configure.Version = "v1";
 
             var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
@@ -84,64 +93,61 @@ public abstract class StartupBase : IStartupBase
             {
                 configure.PostProcess = document =>
                 {
-                    document.Info.Title = Assembly.GetEntryAssembly()?.GetName().Name;
+                    document.Info.Title = Assembly.GetEntryAssembly()
+                        ?.GetName()
+                        .Name;
                     document.Info.Version = "v1";
                     document.Info.Description = "API Documentation";
-                    document.Info.Contact = new NSwag.OpenApiContact
-                    {
-                        Name = "API Contact",
-                        Email = "contact@example.com"
-                    };
                 };
             }
 
-            configure.AddSecurity("JWT", new NSwag.OpenApiSecurityScheme
+            configure.AddSecurity("JWT", new OpenApiSecurityScheme
             {
-                Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+                Type = OpenApiSecuritySchemeType.ApiKey,
                 Name = "Authorization",
-                In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+                In = OpenApiSecurityApiKeyLocation.Header,
                 Description = "Type into the textbox: Bearer {your JWT token}.",
                 Scheme = "Bearer",
                 BearerFormat = "JWT"
             });
 
-            configure.OperationProcessors.Add(
-                new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
         });
     }
 
-    private void ConfigureAuthentication(IServiceCollection services)
+    private void ConfigureAuthentication(
+        IServiceCollection services)
     {
         services.AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
-        {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(AuthenticationConfiguration.AccessSecretKey)),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-            x.Events = new JwtBearerEvents
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
             {
-                OnMessageReceived = context =>
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    var accessToken = context.Request.Query["access_token"];
-                    if (!string.IsNullOrEmpty(accessToken))
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AuthenticationConfiguration.AccessSecretKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        context.Token = accessToken;
-                    }
+                        var accessToken = context.Request.Query["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
 
-                    return Task.CompletedTask;
-                }
-            };
-        });
+                        return Task.CompletedTask;
+                    }
+                };
+            });
     }
 }

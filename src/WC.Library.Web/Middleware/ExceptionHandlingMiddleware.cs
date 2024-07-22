@@ -12,21 +12,23 @@ namespace WC.Library.Web.Middleware;
 
 public class ExceptionHandlingMiddleware
 {
-    private readonly RequestDelegate _next;
-
-    private readonly IIndex<Type, IExceptionHandler> _exceptionHandlers;
-
     private readonly IHostEnvironment _environment;
 
-    public ExceptionHandlingMiddleware(RequestDelegate next,
-        IIndex<Type, IExceptionHandler> exceptionHandlers, IHostEnvironment environment)
+    private readonly IIndex<Type, IExceptionHandler> _exceptionHandlers;
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandlingMiddleware(
+        RequestDelegate next,
+        IIndex<Type, IExceptionHandler> exceptionHandlers,
+        IHostEnvironment environment)
     {
         _next = next;
         _exceptionHandlers = exceptionHandlers;
         _environment = environment;
     }
 
-    public async Task InvokeAsync(HttpContext httpContext)
+    public async Task InvokeAsync(
+        HttpContext httpContext)
     {
         try
         {
@@ -38,7 +40,9 @@ public class ExceptionHandlingMiddleware
         }
     }
 
-    private async Task HandleException(HttpContext httpContext, Exception exception)
+    private async Task HandleException(
+        HttpContext httpContext,
+        Exception exception)
     {
         ErrorDto error;
         try
@@ -79,7 +83,8 @@ public class ExceptionHandlingMiddleware
         return errorDto;
     }
 
-    private IExceptionHandler? GetExceptionHandler(Exception exception)
+    private IExceptionHandler? GetExceptionHandler(
+        Exception exception)
     {
         var exceptionType = exception.GetType();
         while (exceptionType != null)
@@ -111,7 +116,8 @@ public class ExceptionHandlingMiddleware
         await httpContext.Response.WriteAsync(response);
     }
 
-    private static ErrorDto GetDefaultError(Exception exception)
+    private static ErrorDto GetDefaultError(
+        Exception exception)
     {
         return new ErrorDto
         {

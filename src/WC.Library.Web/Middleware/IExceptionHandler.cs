@@ -4,5 +4,6 @@ namespace WC.Library.Web.Middleware;
 
 public interface IExceptionHandler
 {
-    ErrorDto GetError(Exception exception);
+    ErrorDto GetError(
+        Exception exception);
 }

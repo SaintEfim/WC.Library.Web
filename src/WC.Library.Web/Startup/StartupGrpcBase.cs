@@ -11,27 +11,31 @@ namespace WC.Library.Web.Startup;
 
 public abstract class StartupGrpcBase : IStartupBase
 {
-    protected IConfiguration Configuration { get; }
+    private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
 
-    protected StartupGrpcBase(WebApplicationBuilder builder)
+    protected StartupGrpcBase(
+        WebApplicationBuilder builder)
     {
         Configuration = builder.Configuration;
     }
 
-    private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
+    protected IConfiguration Configuration { get; }
 
-    public virtual void ConfigureServices(WebApplicationBuilder builder)
+    public virtual void ConfigureServices(
+        WebApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddGrpc();
         services.AddAutoMapper(_assemblies.Value);
     }
 
-    public virtual void ConfigureContainer(ContainerBuilder containerBuilder)
+    public virtual void ConfigureContainer(
+        ContainerBuilder containerBuilder)
     {
     }
 
-    public virtual void Configure(WebApplication app)
+    public virtual void Configure(
+        WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
