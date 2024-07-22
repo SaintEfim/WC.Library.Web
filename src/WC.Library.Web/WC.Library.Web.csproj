@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>WC.Library.Web</PackageId>
-    <Version>1.0.24</Version>
+    <Version>1.0.25</Version>
     <Authors>SaintEfim</Authors>
   </PropertyGroup>
 
@@ -29,7 +29,6 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1"/>
     <PackageReference Include="WC.Library.Domain.Abstractions" Version="1.0.8"/>
     <PackageReference Include="WC.Library.Employee.Shared" Version="1.0.11"/>
-    <PackageReference Include="WC.Library.Shared" Version="1.0.8"/>
   </ItemGroup>
 
 </Project>
