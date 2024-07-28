@@ -1,6 +1,9 @@
-﻿namespace WC.Library.Web.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WC.Library.Web.Models;
 
 public class DtoBase : IDto
 {
-    public Guid Id { get; init; }
+    [Required]
+    public required Guid Id { get; set; }
 }
