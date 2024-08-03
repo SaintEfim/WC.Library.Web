@@ -9,7 +9,7 @@ using WC.Library.Web.Startup;
 namespace WC.Library.Web.Bootstrap;
 
 public class Program<TStartup>
-    where TStartup : IStartupBase
+    where TStartup : StartupBase
 {
     public static async Task Main(
         string[] args)

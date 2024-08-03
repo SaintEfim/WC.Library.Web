@@ -16,7 +16,7 @@ using WC.Library.Web.Middleware;
 
 namespace WC.Library.Web.Startup;
 
-public abstract class StartupBase : IStartupBase
+public abstract class StartupBase
 {
     private readonly Lazy<Assembly[]> _assemblies = new(AssemblyHelpers.GetApplicationAssemblies);
 
@@ -34,6 +34,7 @@ public abstract class StartupBase : IStartupBase
         WebApplicationBuilder builder)
     {
         var services = builder.Services;
+        services.AddGrpc();
         services.AddControllers()
             .AddNewtonsoftJson();
 
