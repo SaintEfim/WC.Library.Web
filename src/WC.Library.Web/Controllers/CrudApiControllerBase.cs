@@ -63,8 +63,8 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
 
     protected async Task<IActionResult> Update<TUpdateDto>(
         Guid id,
-        IWcTransaction? transaction,
         JsonPatchDocument<TUpdateDto> patchDocument,
+        IWcTransaction? transaction,
         CancellationToken cancellationToken = default)
         where TUpdateDto : class
     {
