@@ -52,10 +52,9 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
     protected async Task<IActionResult> Create<TCreateDto, TCreatedResultDto>(
         TCreateDto payload,
         string createAtRouteName,
-        IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
     {
-        var createdItem = await Manager.Create(Mapper.Map<TDomain>(payload), transaction, cancellationToken);
+        var createdItem = await Manager.Create(Mapper.Map<TDomain>(payload), default, cancellationToken);
 
         return CreatedAtRoute(createAtRouteName, new { id = createdItem.Id },
             Mapper.Map<TCreatedResultDto>(createdItem));
