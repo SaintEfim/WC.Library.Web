@@ -33,26 +33,26 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
     protected TProvider Provider { get; }
 
     protected async Task<ICollection<TDto>> GetMany(
-        IWcTransaction? transaction,
         bool withIncludes = false,
+        IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
     {
-        return Mapper.Map<ICollection<TDto>>(await Provider.Get(transaction, withIncludes, cancellationToken));
+        return Mapper.Map<ICollection<TDto>>(await Provider.Get(withIncludes, transaction, cancellationToken));
     }
 
     protected async Task<TDtoDetail> GetOneById(
         Guid id,
-        IWcTransaction? transaction,
         bool withIncludes = false,
+        IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
     {
-        return Mapper.Map<TDtoDetail>(await Provider.GetOneById(id, transaction, withIncludes, cancellationToken));
+        return Mapper.Map<TDtoDetail>(await Provider.GetOneById(id, withIncludes, transaction, cancellationToken));
     }
 
     protected async Task<IActionResult> Create<TCreateDto, TCreatedResultDto>(
         TCreateDto payload,
-        IWcTransaction? transaction,
         string createAtRouteName,
+        IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
     {
         var createdItem = await Manager.Create(Mapper.Map<TDomain>(payload), transaction, cancellationToken);
@@ -64,11 +64,11 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
     protected async Task<IActionResult> Update<TUpdateDto>(
         Guid id,
         JsonPatchDocument<TUpdateDto> patchDocument,
-        IWcTransaction? transaction,
+        IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
         where TUpdateDto : class
     {
-        var record = await Provider.GetOneById(id, transaction, cancellationToken: cancellationToken);
+        var record = await Provider.GetOneById(id, true, transaction, cancellationToken);
         var updateDto = Mapper.Map<TUpdateDto>(record);
 
         patchDocument.ApplyTo(updateDto);
@@ -86,8 +86,8 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
 
     protected async Task<IActionResult> Delete(
         Guid id,
-        IWcTransaction? transaction,
-        CancellationToken cancellationToken)
+        IWcTransaction? transaction = default,
+        CancellationToken cancellationToken = default)
     {
         _ = await Manager.Delete(id, transaction, cancellationToken);
 
