@@ -9,16 +9,13 @@ namespace WC.Library.Web.Startup;
 
 public static partial class StartupExtensions
 {
-    private static string AccessSecretKey { get; set; } = string.Empty;
-
     public static void AddAuthentication(
         this IServiceCollection services,
         IConfiguration config)
     {
-        config.GetSection("AuthenticationConfiguration")
-            .Bind(AccessSecretKey);
+        var accessSecretKey = config.GetValue<string>("AuthenticationConfiguration:AccessSecretKey");
 
-        if (AccessSecretKey == default!)
+        if (string.IsNullOrEmpty(accessSecretKey))
         {
             throw new Exception("AccessSecretKey is empty");
         }
@@ -36,7 +33,7 @@ public static partial class StartupExtensions
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccessSecretKey)),
+                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(accessSecretKey)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

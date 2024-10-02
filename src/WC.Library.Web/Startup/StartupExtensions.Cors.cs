@@ -11,7 +11,7 @@ public static partial class StartupExtensions
     {
         var urlCors = config.GetValue<string>("Cors:AllowedOrigins");
 
-        if (urlCors == default)
+        if (string.IsNullOrEmpty(urlCors))
         {
             throw new Exception("Cors not configured");
         }
