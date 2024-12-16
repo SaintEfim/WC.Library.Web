@@ -26,10 +26,9 @@ jobs:
       - name: Get latest version from NuGet
         id: get-version
         run: |
-          PACKAGE_ID="WC.Library.Web"
-          dotnet tool install --global dotnet-outdated
-          PACKAGE_VERSION=$(dotnet outdated --check-published --package $PACKAGE_ID | grep -oP "(?<=\s$PACKAGE_ID\s).+" | head -n 1)
-          
+          PACKAGE_ID="wc.library.web"
+          PACKAGE_VERSION=$(curl -s https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID}/index.json | jq -r '.versions[-1]')
+
           if [ -z "$PACKAGE_VERSION" ]; then
             echo "No versions found on NuGet. Starting from 1.0.0."
             NEW_VERSION="1.0.0"
@@ -37,13 +36,14 @@ jobs:
             echo "Latest version: $PACKAGE_VERSION"
             NEW_VERSION=$(echo $PACKAGE_VERSION | awk -F. -v OFS=. '{$NF++; print}')
           fi
-          
+
           echo "New version: $NEW_VERSION"
           echo "version=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Update version in csproj
         run: |
-          sed -i "s/<Version>.*<\/Version>/<Version>${{ env.version }}<\/Version>/" src/WC.Library.Web/WC.Library.Web.csproj
+          # Обновляем версию в csproj
+          dotnet build src/WC.Library.Web/WC.Library.Web.csproj /p:Version=${{ env.version }}
 
       - name: Build and pack
         run: dotnet pack src/WC.Library.Web/WC.Library.Web.csproj -c Release -o ./out
