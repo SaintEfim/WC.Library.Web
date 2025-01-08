@@ -10,7 +10,7 @@
     <PackageReference Include="Autofac" Version="8.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1"/>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.65.0"/>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8"/>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Middleware" Version="8.8.0"/>
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.8"/>
@@ -20,10 +20,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
-    <PackageReference Include="NSwag.AspNetCore" Version="14.1.0"/>
-    <PackageReference Include="Serilog" Version="4.0.1"/>
+    <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2"/>
-    <PackageReference Include="WC.Library.Domain.Abstractions" Version="1.0.11"/>
+    <PackageReference Include="WC.Library.Domain.Abstractions" Version="1.0.12" />
     <PackageReference Include="WC.Library.Employee.Shared" Version="1.0.11"/>
   </ItemGroup>
 
