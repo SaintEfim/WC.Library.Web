@@ -39,7 +39,6 @@ jobs:
 
           # Проверяем, есть ли изменения в проектах
           if echo "$ESSENTIAL_CHANGES" | grep -Eq "src/WC.Library.Web"; then
-          if echo "$ESSENTIAL_CHANGES" | grep -Eq "src/WC.Library.Web"; then
             echo "Changes detected in project files."
             echo "should_publish=true" >> $GITHUB_ENV
           else
