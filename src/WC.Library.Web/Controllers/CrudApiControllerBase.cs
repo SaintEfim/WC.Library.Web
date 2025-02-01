@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Sieve.Models;
 using WC.Library.Data.Services;
 using WC.Library.Domain.Models;
 using WC.Library.Domain.Services;
@@ -33,11 +34,12 @@ public abstract class CrudApiControllerBase<TCategoryName, TManager, TProvider, 
     protected TProvider Provider { get; }
 
     protected async Task<ICollection<TDto>> GetMany(
+        SieveModel? filter = default,
         bool withIncludes = false,
         IWcTransaction? transaction = default,
         CancellationToken cancellationToken = default)
     {
-        return Mapper.Map<ICollection<TDto>>(await Provider.Get(withIncludes, transaction, cancellationToken));
+        return Mapper.Map<ICollection<TDto>>(await Provider.Get(filter, withIncludes, transaction, cancellationToken));
     }
 
     protected async Task<TDtoDetail> GetOneById(
