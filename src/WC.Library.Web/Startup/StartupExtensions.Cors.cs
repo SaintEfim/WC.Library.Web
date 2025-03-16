@@ -9,16 +9,19 @@ public static partial class StartupExtensions
         this IApplicationBuilder app,
         IConfiguration config)
     {
-        var allowedOrigins = config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+        var allowedOrigins = config.GetSection("Cors:AllowedOrigins").Get<string[]>();
 
-        if (allowedOrigins.Length == 0)
+        if (allowedOrigins == null || allowedOrigins.Length == 0)
         {
-            throw new Exception("Cors не настроен.");
+            throw new Exception("CORS is not configured. Make sure the allowed origins are defined in the configuration.");
         }
+
+        Console.WriteLine($"CORS is configured for the following origins: {string.Join(", ", allowedOrigins)}");
 
         app.UseCors(builder =>
             builder.WithOrigins(allowedOrigins)
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+                   .AllowAnyMethod()
+                   .AllowAnyHeader());
     }
 }
+
